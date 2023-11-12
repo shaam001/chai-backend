@@ -9,7 +9,18 @@ dotenv.config({
 
 
 connectDB()
-
+.then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is running at port : ${process.env.PORT}`);
+    })
+    app.on("error", (error) => {
+        console.log("ERROR: ", error);
+        throw error
+    })
+})
+.catch((err) =>{
+    console.log("MONGO db connection failed !!! ", err);
+})
 
 
 /* 
@@ -38,3 +49,6 @@ const app = express()
 })()
 
 */
+
+// we will app.use when we need to use middleware and configuration settings
+// (req, res) is not the only elements we have (err, req, res, next)
