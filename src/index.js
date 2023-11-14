@@ -1,5 +1,5 @@
 // require('dotenv').config({path: './env'})
-// to use import for dotenv we have to set config as done below and add "-r dotenv/config --experimental-json-modules" in dev scripts after "nodemon" in package.json so that we can use this experimental feature in future version it may not require
+// to use import for dotenv we have to set config as done below and add "-r dotenv/config --experimental-json-modules" in dev scripts after "nodemon" in package.json so that we can use this experimental feature, in future versions it may not require
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
 
