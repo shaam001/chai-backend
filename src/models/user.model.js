@@ -60,12 +60,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// custom methods to check is the password correct
+// methods to check, is the password correct
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-// custom methods to generate access token
+// methods to generate access token
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -81,7 +81,7 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-// custom methods to generate refresh token
+// methods to generate refresh token
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
