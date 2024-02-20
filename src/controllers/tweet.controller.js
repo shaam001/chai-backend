@@ -158,7 +158,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
     const tweet = await Tweet.findById(tweetId)
 
     if (!tweet) {
-        throw new ApiError(400, "this tweet does not exist")
+        throw new ApiError(404, "this tweet does not exist")
     }
 
     if (tweet.owner.toString() != req.user?._id.toString()) {

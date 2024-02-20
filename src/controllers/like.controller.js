@@ -17,7 +17,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     const video = await Video.findById(videoId)
 
     if (!video) {
-        throw new ApiError(400, "This video does not exist")
+        throw new ApiError(404, "This video does not exist")
     }
 
     const loggedInUser = req.user?._id
@@ -57,7 +57,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     const comment = await Comment.findById(commentId)
 
     if (!comment) {
-        throw new ApiError(400, "This comment does not exist")
+        throw new ApiError(404, "This comment does not exist")
     }
 
     const loggedInUser = req.user?._id
@@ -98,7 +98,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     const tweet = await Tweet.findById(tweetId)
 
     if (!tweet) {
-        throw new ApiError(400, "This Tweet does not exist")
+        throw new ApiError(404, "This Tweet does not exist")
     }
 
 

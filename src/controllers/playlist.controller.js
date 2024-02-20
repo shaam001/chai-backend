@@ -135,7 +135,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
     ])
 
     if (!playlist?.length) {
-        throw new ApiError(400, "This playlist does not exist")
+        throw new ApiError(404, "This playlist does not exist")
     }
 
     return res.status(200).json(new ApiResponse(200, playlist[0], "Playlist fetched successfully"))
@@ -165,7 +165,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 
     const matchedVideo = playlist.videos.find((video) => video.equals(videoId));
     if (matchedVideo) {
-        throw new ApiError(400, "Video already exists in the playlist");
+        throw new ApiError(409, "Video already exists in the playlist");
     }
 
     try {
@@ -199,7 +199,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
     const matchedVideo = playlist.videos.find((video) => video.equals(videoId));
     if (!matchedVideo) {
-        throw new ApiError(400, "No video matched with this video id");
+        throw new ApiError(404, "No video matched with this video id");
     }
 
     try {

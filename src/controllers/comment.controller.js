@@ -118,7 +118,7 @@ const addComment = asyncHandler(async (req, res) => {
 
     const video = await Video.findById(videoId)
     if (!video) {
-        throw new ApiError(400, "This video does not exist")
+        throw new ApiError(404, "This video does not exist")
     }
 
     const comment = await Comment.create({
@@ -133,7 +133,7 @@ const addComment = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while posting a comment")
     }
 
-    return res.status(200).json(new ApiResponse(200, postedComment, "Comment posted successfully."))
+    return res.status(201).json(new ApiResponse(200, postedComment, "Comment posted successfully."))
 })
 
 const updateComment = asyncHandler(async (req, res) => {

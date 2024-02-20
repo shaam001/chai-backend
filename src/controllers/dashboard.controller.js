@@ -103,10 +103,43 @@ const getChannelStats = asyncHandler(async (req, res) => {
 const getChannelVideos = asyncHandler(async (req, res) => {
     // TODO: Get all the videos uploaded by the channel
     const user = req.user?._id
-    const videos = await Video.find({ owner: user });
+
+    const videos = await Video.aggregate([
+        {
+            $match: {
+                owner: user
+            }
+        },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "video",
+                as: "totalLikes"
+            }
+        },
+        {
+            $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "video",
+                as: "totalComments"
+            }
+        },
+        {
+            $addFields: {
+                totalLikes: {
+                    $size: "$totalLikes"
+                },
+                totalComments: {
+                    $size: "$totalComments"
+                }
+            }
+        }
+    ])
 
     if (!videos?.length) {
-        throw new ApiError(404, "You haven’t uploaded a video yet.")
+        throw new ApiError(404, "You haven't uploaded a video yet.")
     }
 
     return res.status(200).json(new ApiResponse(200, videos, "Videos fetched successfully"))
