@@ -186,13 +186,20 @@ const getVideoById = asyncHandler(async (req, res) => {
                         }
                     }
                 ],
-                getTotalLikesAndComments: [
+                totalLikesCommentsAndSubscription: [
                     {
                         $lookup: {
                             from: "likes",
                             localField: "_id",
                             foreignField: "video",
                             as: "totalLikesOnVideo"
+                        }
+                    },
+                    {
+                        $addFields: {
+                            likedByUser: {
+                                $in: [req.user?._id, "$totalLikesOnVideo.likedBy"]
+                            }
                         }
                     },
                     {
@@ -204,10 +211,28 @@ const getVideoById = asyncHandler(async (req, res) => {
                         },
                     },
                     {
+                        $lookup: {
+                            from: "subscriptions",
+                            localField: "owner",
+                            foreignField: "channel",
+                            as: "subscribers"
+                        }
+                    },
+                    {
+                        $addFields: {
+                            isSubscribedTo: {
+                                $in: [req.user?._id, "$subscribers.subscriber"]
+                            }
+                        }
+                    },
+                    {
                         $group: {
                             _id: null,
                             TotalLikesOnVideo: { $sum: { $size: "$totalLikesOnVideo" } },
                             TotalComments: { $sum: { $size: "$totalComments" } },
+                            TotalSubscribers: { $sum: { $size: "$subscribers" } },
+                            isSubscribedTo: { $first: "$isSubscribedTo" },
+                            likedByUser: { $first: "$likedByUser" }
                         }
                     }
                 ]

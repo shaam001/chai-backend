@@ -60,6 +60,13 @@ const getVideoComments = asyncHandler(async (req, res) => {
             }
         },
         {
+            $addFields: {
+                likedByUser: {
+                    $in: [req.user?._id, "$totalLikesOnComment.likedBy"]
+                }
+            }
+        },
+        {
             $group: {
                 _id: "$_id",
                 content: { $first: "$content" },
@@ -68,6 +75,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
                 createdAt: { $first: "$createdAt" },
                 updatedAt: { $first: "$updatedAt" },
                 totalLikesOnComment: { $sum: { $size: "$totalLikesOnComment" } },
+                likedByUser: { $first: "$likedByUser" }
             }
         },
         {

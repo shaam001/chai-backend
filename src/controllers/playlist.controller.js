@@ -169,6 +169,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     }
 
     try {
+        // $addToSet can also be used
         playlist.videos.push(video);
         const updatedPlaylist = await playlist.save();
 
