@@ -42,19 +42,19 @@ const getAllVideos = asyncHandler(async (req, res) => {
                 sortField: "$" + sortBy,
             }
         },
-        // $meta can also be used with $sort
-        {
-            $sort: { sortField: sortTypeNum }
-        },
-        {
-            $skip: (pageNum - 1) * limitNum
-        },
-        {
-            $limit: limitNum
-        },
         {
             $facet: {
                 videos: [
+                    // $meta can also be used with $sort
+                    {
+                        $sort: { sortField: sortTypeNum }
+                    },
+                    {
+                        $skip: (pageNum - 1) * limitNum
+                    },
+                    {
+                        $limit: limitNum
+                    },
                     {
                         $lookup: {
                             from: "users",
@@ -91,7 +91,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
     ])
 
     if (!getVideos[0]?.matchedVideosCount?.length) {
-        throw new ApiError(400, "No video found for the requested query. You may try a lower page number")
+        throw new ApiError(400, "No video found for the requested query.")
+    }
+
+    if (!getVideos[0]?.videos?.length && getVideos[0]?.matchedVideosCount?.length) {
+        throw new ApiError(400, "You should try lower page number")
     }
 
     return res.status(200).json(new ApiResponse(200, getVideos[0], "All videos fetched successfully"))
